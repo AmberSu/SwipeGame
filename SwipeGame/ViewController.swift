@@ -17,9 +17,7 @@ class ViewController: UIViewController {
     @IBAction func swipeLeft(_ sender: UISwipeGestureRecognizer) {
             value = value - 1
             number.text = String(value)
-            print("swipe")
         }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +43,7 @@ class ViewController: UIViewController {
             labelDisapear()
             timer.invalidate()
             break
-        case 60:
+        case 100:
             timer.invalidate()
             print("Game Over")
             break
@@ -56,12 +54,12 @@ class ViewController: UIViewController {
     }
     
     func movementOn() {
-         guard number.text != "0", number.text != "60" else {
+         guard number.text != "0", number.text != "100" else {
            return
         }
         let randomNumber1 = arc4random_uniform(UInt32(self.view.bounds.width-number.frame.width))
         let randomNumber2 = arc4random_uniform(UInt32(self.view.bounds.height-number.frame.height))
-        UIView.animate(withDuration: 3, animations: {
+        UIView.animate(withDuration: 4, delay: 0, options: .allowUserInteraction, animations: {
             self.number.frame.origin.x = CGFloat(randomNumber1)
             self.number.frame.origin.y = CGFloat(randomNumber2)
         }) { (true) in
