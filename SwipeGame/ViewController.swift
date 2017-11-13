@@ -11,16 +11,19 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var number: UILabel!
+    var timer = Timer()
     var value: Int = 50
     
     @IBAction func swipeLeft(_ sender: UISwipeGestureRecognizer) {
             value = value - 1
             number.text = String(value)
             print("swipe")
-    }
+        }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        number.text = String(value)
         timerOn()
         movementOn()
     }
@@ -32,19 +35,19 @@ class ViewController: UIViewController {
     }
     
     func timerOn() {
-        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
     }
     
     
     @objc func updateTimer() {
         switch value {
         case 0:
-            number.text = "You Won!"
             labelDisapear()
+            timer.invalidate()
             break
-        case 100:
-            number.text = "Game Over"
-            labelDisapear()
+        case 60:
+            timer.invalidate()
+            print("Game Over")
             break
         default:
             value = value + 1
@@ -53,16 +56,18 @@ class ViewController: UIViewController {
     }
     
     func movementOn() {
-        if value != 0 && value != 100 {
-            let randomNumber1 = arc4random_uniform(UInt32(280))
-            let randomNumber2 = arc4random_uniform(UInt32(680))
-            UIView.animate(withDuration: 3, animations: {
-                self.number.frame.origin.x = CGFloat(randomNumber1)
-                self.number.frame.origin.y = CGFloat(randomNumber2)
-            }) { (true) in
-                self.movementOn()
-            }
+         guard number.text != "0", number.text != "60" else {
+           return
         }
+        let randomNumber1 = arc4random_uniform(UInt32(self.view.bounds.width-number.frame.width))
+        let randomNumber2 = arc4random_uniform(UInt32(self.view.bounds.height-number.frame.height))
+        UIView.animate(withDuration: 3, animations: {
+            self.number.frame.origin.x = CGFloat(randomNumber1)
+            self.number.frame.origin.y = CGFloat(randomNumber2)
+        }) { (true) in
+            self.movementOn()
+        }
+        return
     }
 
 }
